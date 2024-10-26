@@ -1,0 +1,11 @@
+Model Information:
+* title:	A book
+* source:	https://sketchfab.com/3d-models/a-book-c850e5d630e9420d85b8d23a2efae4d5
+* author:	dar1amd (https://sketchfab.com/dar1amd)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "A book" (https://sketchfab.com/3d-models/a-book-c850e5d630e9420d85b8d23a2efae4d5) by dar1amd (https://sketchfab.com/dar1amd) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
