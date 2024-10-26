@@ -21,12 +21,13 @@ export class CreateCourseDto {
   @IsString()
   desc: string;
 
-  @IsNotEmpty()
-  img: string; // Explicitly define as file object
+  @IsOptional()
+  img?: string; // Explicitly define as file object
 
   @IsArray()
+  @IsOptional()
   @ValidateNested({ each: true }) 
   @Type(() => SlideDto) 
-  slides: SlideDto[];
+  slides?: SlideDto[];
 }
 

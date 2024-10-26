@@ -11,11 +11,9 @@ export class CoursesService {
   constructor(@InjectModel(Course.name) private courseModel: Model<CourseDocument>) {}
 
   // Create a new course with file uploads for slides[] and img
-  async create(createCourseDto: CreateCourseDto, imgPath: string, slidePaths: string[]): Promise<CourseDocument> {
+  async create(createCourseDto: CreateCourseDto): Promise<CourseDocument> {
     const courseData = {
       ...createCourseDto,
-      img: imgPath,
-      slides: slidePaths.map((path) => ({ title: '', file: path })), // Default title as empty string
       createdAt: new Date(),
       updatedAt: new Date(),
     };

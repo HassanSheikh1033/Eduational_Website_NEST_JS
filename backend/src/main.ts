@@ -4,7 +4,6 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express'; // Import NestExpressApplication
 
-
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule); // Specify the type here
 
@@ -30,8 +29,9 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-
-  await app.listen(3000);
+  await app.listen(3000, () => {
+    console.log('Server running on port 3000');
+  });
 }
 
 bootstrap();
