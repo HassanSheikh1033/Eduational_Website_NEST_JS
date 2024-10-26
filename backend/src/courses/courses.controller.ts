@@ -84,10 +84,9 @@ export class CoursesController {
           type: 'array',
           items: {
             type: 'string',
-            format: 'binary', // For the slide file uploads (PDF)
+            format: 'binary', 
           },
         },
-        // Add any other properties from CreateCourseDto as needed
       },
     },
   })

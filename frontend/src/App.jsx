@@ -8,6 +8,9 @@ import EditProfile from "./pages/EditProfile";
 import { UserProvider } from "./context/userContext";
 import Projects from "./pages/Projects";
 import ContactSection from "./pages/Contact";
+import Courses from "./pages/Courses";
+import CoursesDetails from "./pages/CoursesDetails";
+import About from "./pages/About";
 
 
 const App = () => {
@@ -17,11 +20,14 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About/>} />
         <Route path="/signup" element={<RegisterForm />} />
         <Route path="/signin" element={<LoginForm />} />
         <Route path="/updateProfile/:id" element={<EditProfile />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/contact" element={<ContactSection/>} />
+        <Route path="/courses" element={<Courses/>} />
+        <Route path="/courses/details" element={<CoursesDetails/>} />
       </Routes>
       <Footer />
     </Router>
