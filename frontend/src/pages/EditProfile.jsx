@@ -41,32 +41,48 @@ export default function EditProfile() {
   }, [id]);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      [name]: files ? files[0] : value,
-    }));
+    const { name, files } = e.target;
+    if (name === 'avatar') {
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        avatar: files[0], // Update the avatar
+      }));
+      setIsAvatarTouched(true); // Mark avatar as touched
+    }
   };
 
   const changeAvatarHandler = async () => {
-    if (profile.avatar instanceof File) {
-      try {
-        const formData = new FormData();
-        formData.append('avatar', profile.avatar);
-  
-        await userApi.updateAvatar(user._id, formData);
-        setIsAvatarTouched(false);
-        alert('Avatar updated successfully!');
-      } catch (error) {
-        console.error('Error updating avatar:', error);
-        
-        alert(`Failed to update avatar. ${error.response?.data?.message || 'Please try again.'}`);
-      }
-    } else {
+    if (!profile.avatar || !(profile.avatar instanceof File)) {
       alert('Please select a valid image file for the avatar.');
+      return;
+    }
+
+    try {
+      if (profile.avatar.size > 5 * 1024 * 1024) {
+        alert('File size should be less than 5MB');
+        return;
+      }
+
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!validTypes.includes(profile.avatar.type)) {
+        alert('Please upload a valid image file (JPEG, PNG, GIF, WebP)');
+        return;
+      }
+
+      const response = await userApi.updateAvatar(user._id, profile.avatar);
+
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        avatar: response.avatar,
+      }));
+
+      setIsAvatarTouched(false);
+      alert('Avatar updated successfully!');
+    } catch (error) {
+      console.error('Error updating avatar:', error);
+      alert('Failed to update avatar. Please try again.');
     }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,42 +115,48 @@ export default function EditProfile() {
         </h2>
 
         {/* Avatar Section */}
-        <div className="avatar_wrapper">
-          <div className="profile_avatar_l profile_avatar app_transition">
+        <div className="relative">
+          <div className="w-32 h-32 mx-auto rounded-full overflow-hidden shadow-lg">
             <img
               src={
                 profile.avatar instanceof File
                   ? URL.createObjectURL(profile.avatar)
-                  : `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/uploads/${profile.avatar}`
+                  : profile.avatar
+                  ? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/uploads/${profile.avatar}`
+                  : '/default-avatar.png'
               }
-              alt=""
-              className="rounded-full w-full h-full object-cover"
+              alt="Profile Avatar"
+              className="w-full h-full object-cover"
             />
           </div>
 
-          {/* Form to update Avatar */}
-          <form className="avatar-form">
-            <input
-              type="file"
-              name="avatar"
-              id="avatar"
-              accept="image/*"
-              onChange={handleChange}
-              className="hidden"
-            />
-            <label htmlFor="avatar" onClick={() => setIsAvatarTouched(true)}>
-              <FaEdit />
-            </label>
-          </form>
+          <label
+            htmlFor="avatar"
+            className="absolute bottom-2 right-[34%] bg-blue-500 text-white p-2 rounded-full shadow-lg hover:bg-blue-600 transition cursor-pointer"
+          >
+            <FaEdit />
+          </label>
+          <input
+            type="file"
+            name="avatar"
+            id="avatar"
+            accept="image/*"
+            onChange={handleChange}
+            className="hidden"
+          />
           {isAvatarTouched && (
-            <button className="profile_avatar-btn" onClick={changeAvatarHandler}>
+            <button
+              className="absolute top-2 right-[34%] bg-green-500 text-white p-2 rounded-full shadow-lg hover:bg-green-600 transition"
+              onClick={changeAvatarHandler}
+              title="Save Avatar"
+            >
               <FaCheck />
             </button>
           )}
         </div>
 
-        {/* Rest of the Form */}
-        <form onSubmit={handleSubmit}>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="mt-6">
           <div className="mb-4">
             <label htmlFor="name" className="block text-gray-700 text-sm font-semibold mb-2">
               Name

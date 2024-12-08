@@ -62,58 +62,41 @@ export const testimonials = [
 
 export const features = [
   {
-    icon: <BotMessageSquare />,
+    title: "Matriculation",
     text: "Phase 1",
     description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, dolor. Sapiente maiores ducimus quod?",
+      "Completed Matriculation from The Right School with a strong focus on science and mathematics. Developed analytical skills through a rigorous academic curriculum.",
   },
   {
-    icon: <Fingerprint />,
+    title: "Intermediate",
     text: "Phase 2",
     description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, dolor. Sapiente maiores ducimus quod?",
+      "Completed Intermediate education from Government College, specializing in science and mathematics. Gained proficiency in computer skills, including programming and data analysis.",
   },
   {
-    icon: <ShieldHalf />,
+    title: "Bachelor in CS",
     text: "Phase 3",
     description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, dolor. Sapiente maiores ducimus quod?",
+      "Currently pursuing a Bachelor in Computer Science at PMAS Arid Agriculture University.Continuing the degree with 3 years remaining to further specialize in advanced computing technologies.",
   },
-  {
-    icon: <BatteryCharging />,
-    text: "Phase 4",
-    description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, dolor. Sapiente maiores ducimus quod?",
-  },
-  {
-    icon: <PlugZap />,
-    text: "Phase 5",
-    description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, dolor. Sapiente maiores ducimus quod?",
-  },
-  {
-    icon: <GlobeLock />,
-    text: "Phase 6",
-    description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, dolor. Sapiente maiores ducimus quod?",
-  },
+ 
 ];
 
 export const checklistItems = [
   {
     title: "Web Development",
     description:
-      "Track the performance of your VR apps and gain insights into user behavior.",
+      "Build engaging and responsive websites, track user behavior, and optimize performance with cutting-edge analytics tools.",
   },
   {
     title: "App Development",
     description:
-      "Track the performance of your VR apps and gain insights into user behavior.",
+      "Create seamless mobile experiences while monitoring app performance and gaining actionable insights into user interactions.",
   },
   {
     title: "Desktop Applications",
     description:
-      "Track the performance of your VR apps and gain insights into user behavior.",
+      "Develop powerful desktop solutions with integrated tools to track performance and enhance user workflows effectively.",
   },
 ];
 
@@ -128,17 +111,14 @@ export const resourcesLinks = [
 ];
 
 export const platformLinks = [
-  { href: "#", text: "Features" },
-  { href: "#", text: "Supported Devices" },
-  { href: "#", text: "System Requirements" },
-  { href: "#", text: "Downloads" },
-  { href: "#", text: "Release Notes" },
+  { href: "#", text: "Phone No: +923007592310" },
+  { href: "#", text: "Email: hassanfarooq1033@gmail.com" },
+  { href: "#", text: "Location: Burewala, Punjab, Pakistan" },
 ];
 
 export const communityLinks = [
-  { href: "#", text: "Events" },
-  { href: "#", text: "Meetups" },
-  { href: "#", text: "Conferences" },
-  { href: "#", text: "Hackathons" },
-  { href: "#", text: "Jobs" },
+  { href: "#", text: "Upwork" },
+  { href: "#", text: "Fiverr" },
+  { href: "#", text: "Github" },
+  { href: "#", text: "Linkedin" },
 ];

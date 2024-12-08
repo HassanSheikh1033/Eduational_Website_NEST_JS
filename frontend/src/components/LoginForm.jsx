@@ -42,14 +42,14 @@ const LoginForm = () => {
         <form className="flex flex-col items-center" onSubmit={handleLogin}>
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Sign In</h1>
           
-          <div className="social-icons flex justify-center mb-4 space-x-4">
+          {/* <div className="social-icons flex justify-center mb-4 space-x-4">
             <a href="#" className="icon p-2 text-2xl text-red-500 hover:text-red-700 transition duration-200"><FaGooglePlusG /></a>
             <a href="#" className="icon p-2 text-2xl text-blue-600 hover:text-blue-800 transition duration-200"><FaFacebookF /></a>
             <a href="#" className="icon p-2 text-2xl text-gray-800 hover:text-gray-900 transition duration-200"><FaGithub /></a>
             <a href="#" className="icon p-2 text-2xl text-blue-500 hover:text-blue-700 transition duration-200"><FaLinkedinIn /></a>
-          </div>
+          </div> */}
           
-          <span className="text-sm text-gray-600 mb-4">or use your email for sign in</span>
+          {/* <span className="text-sm text-gray-600 mb-4">or use your email for sign in</span> */}
           
           <input 
             type="email" 

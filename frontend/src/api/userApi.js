@@ -80,18 +80,32 @@ export const userApi = {
 
   // Update user avatar
   updateAvatar: async (id, file) => {
+    // Validate file input
+    if (!file || !(file instanceof File)) {
+      throw new Error('Invalid file provided');
+    }
+
     const formData = new FormData();
-    formData.append('avatar', file);
+    formData.append('avatar', file, file.name);
 
     try {
       const response = await api.patch(`/${id}/avatar`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // Important for file uploads
         },
+        transformRequest: [(data) => data], // Prevent Axios from modifying FormData
       });
       return response.data; // Return updated user data with avatar URL
     } catch (error) {
-      console.error(`Update Avatar Error (ID: ${id}):`, error.response ? error.response.data : error.message); // Log the error
+      console.error(`Update Avatar Error (ID: ${id}):`, error.response ? error.response.data : error.message);
+      
+      // More detailed error logging
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+      }
+      
       throw error.response?.data || error.message; // Handle errors
     }
   },

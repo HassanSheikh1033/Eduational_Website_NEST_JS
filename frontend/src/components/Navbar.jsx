@@ -2,7 +2,7 @@ import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import { navItems } from "../constants";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useUser } from '../context/userContext';
 import { userApi } from '../api/userApi';
 
@@ -11,6 +11,7 @@ const Navbar = () => {
   const { user, setUser } = useUser();
   const [profileImg, setProfileImg] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
@@ -37,19 +38,39 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 py-3 px-6 bg-white border-b border-neutral-300 shadow-sm backdrop-blur-lg">
+    <nav className="sticky top-0 z-50 py-3 px-6 bg-white/80 border-b border-neutral-300 shadow-sm backdrop-blur-lg">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <div className="flex items-center space-x-2">
-          <img className="h-10 w-10" src={logo} alt="Logo" />
-          <span className="text-xl font-semibold text-gray-900">HF Tech</span>
+        {/* Logo with hover effect */}
+        <div 
+          className="flex items-center space-x-2 cursor-pointer hover:scale-105 transition-transform duration-200"
+          onClick={() => navigate('/')}
+        >
+          <img 
+            className="h-10 w-10 rounded-full shadow-md transition-transform" 
+            src={logo} 
+            alt="Logo" 
+          />
+          <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            HF Tech
+          </span>
         </div>
 
         {/* Desktop Menu */}
         <ul className="hidden lg:flex space-x-8 font-medium text-gray-700">
           {user && navItems.map((item, index) => (
-            <li key={index}>
-              <Link to={item.href} className="hover:text-blue-500 transition duration-200">
+            <li 
+              key={index}
+              className="hover:scale-105 transition-transform duration-200"
+              style={{
+                borderBottom: location.pathname === item.href 
+                  ? '2px solid rgb(59 130 246)' 
+                  : '2px solid transparent' 
+              }}
+            >
+              <Link 
+                to={item.href} 
+                className="hover:text-blue-500 transition duration-200 pb-1"
+              >
                 {item.label}
               </Link>
             </li>
@@ -59,8 +80,11 @@ const Navbar = () => {
         {/* Profile and Actions - Desktop */}
         {user ? (
           <div className="hidden lg:flex items-center space-x-4">
-            <Link to={`/updateProfile/${user._id}`} className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+            <Link 
+              to={`/updateProfile/${user._id}`} 
+              className="flex items-center space-x-2 group"
+            >
+              <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden border-2 border-blue-500 group-hover:scale-110 transition-transform">
                 {profileImg.avatar ? (
                   <img
                     src={`http://localhost:3000${profileImg.avatar}`}
@@ -73,53 +97,71 @@ const Navbar = () => {
                   </span>
                 )}
               </div>
-              <span className="text-gray-700">{user.username || 'Profile'}</span>
+              <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
+                {user.username || 'Profile'}
+              </span>
             </Link>
             <button
               onClick={handleLogout}
-              className="text-gray-700 p-2 hover:bg-gray-200 rounded-md transition duration-200"
+              className="text-white bg-gradient-to-r from-red-500 to-red-700 p-2 rounded-md hover:scale-105 hover:shadow-lg transition duration-200"
             >
               Logout
             </button>
           </div>
         ) : (
           <div className="hidden lg:flex space-x-6">
-            <Link to="/signin" className="text-gray-700 p-2 hover:bg-gray-200 rounded-md">
-              Sign In
-            </Link>
-            <Link
-              to="/signup"
-              className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-md transition duration-200"
+            <div 
+              className="text-gray-700 p-2 hover:bg-gray-200 rounded-md hover:scale-105 transition-transform duration-200"
             >
-              Create an account
-            </Link>
+              <Link to="/signin">Sign In</Link>
+            </div>
+            <div
+              className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-md transition duration-200 hover:scale-105"
+            >
+              <Link to="/signup">Create an account</Link>
+            </div>
           </div>
         )}
 
         {/* Mobile Menu Button */}
-        <button onClick={toggleNavbar} className="lg:hidden p-2">
+        <button 
+          onClick={toggleNavbar} 
+          className="lg:hidden p-2 active:scale-90 transition-transform"
+        >
           {mobileDrawerOpen ? "" : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile Drawer Menu */}
       {mobileDrawerOpen && (
-        <div className="fixed inset-0 z-40 flex flex-col h-screen bg-opacity-15 bg-black items-center justify-center space-y-6 lg:hidden">
-          <div className="bg-white w-4/5 max-w-sm p-6 rounded-lg shadow-lg">
+        <div className="fixed inset-0 z-40 flex flex-col h-screen bg-black bg-opacity-50 items-center justify-center space-y-6 lg:hidden animate-fade-in">
+          <div className="bg-white w-4/5 max-w-sm p-6 rounded-lg shadow-2xl animate-slide-up">
             <div className="flex justify-between items-center mb-6">
-              <span className="text-2xl font-semibold text-gray-900"></span>
-              <button onClick={toggleNavbar} className="text-gray-700">
+              <span className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                HF Tech
+              </span>
+              <button 
+                onClick={toggleNavbar} 
+                className="text-gray-700 active:scale-90 transition-transform"
+              >
                 <X size={24} />
               </button>
             </div>
 
             <ul className="space-y-4 text-lg font-medium text-gray-800">
               {user && navItems.map((item, index) => (
-                <li key={index}>
+                <li 
+                  key={index}
+                  className="transition-all duration-200 hover:translate-x-2"
+                >
                   <Link
                     to={item.href}
                     onClick={toggleNavbar}
-                    className="block py-2 px-4 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                    className={`block py-2 px-4 rounded-md transition-colors duration-200 ${
+                      location.pathname === item.href 
+                        ? 'bg-blue-50 text-blue-600' 
+                        : 'hover:bg-gray-100'
+                    }`}
                   >
                     {item.label}
                   </Link>
@@ -129,29 +171,56 @@ const Navbar = () => {
 
             <div className="mt-8 space-y-4">
               {user ? (
-                <div className="flex flex-col space-y-4">
-                  <Link to={`/updateProfile/${user._id}`} className="py-2 px-4 bg-gray-200 text-center rounded-md">
-                    Profile
+                <div className="space-y-4">
+                  <Link 
+                    to={`/updateProfile/${user._id}`} 
+                    className="flex items-center space-x-2 group"
+                    onClick={toggleNavbar}
+                  >
+                    <div className="w-12 h-12 rounded-full bg-gray-300 overflow-hidden border-2 border-blue-500 group-hover:scale-110 transition-transform">
+                      {profileImg.avatar ? (
+                        <img
+                          src={`http://localhost:3000${profileImg.avatar}`}
+                          alt="User Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-gray-500 flex items-center justify-center h-full text-xl">
+                          {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
+                      {user.username || 'Profile'}
+                    </span>
                   </Link>
                   <button
-                    onClick={handleLogout}
-                    className="py-2 px-4 bg-gradient-to-r from-red-500 to-red-700 text-white text-center rounded-md transition duration-200"
+                    onClick={() => {
+                      handleLogout();
+                      toggleNavbar();
+                    }}
+                    className="w-full text-white bg-gradient-to-r from-red-500 to-red-700 p-3 rounded-md hover:shadow-lg transition duration-200"
                   >
                     Logout
                   </button>
                 </div>
               ) : (
-                <>
-                  <Link to="/signin" className="py-2 px-4 bg-gray-200 text-center rounded-md">
+                <div className="space-y-4">
+                  <Link 
+                    to="/signin" 
+                    onClick={toggleNavbar}
+                    className="block w-full text-center text-gray-700 p-3 hover:bg-gray-200 rounded-md transition-colors"
+                  >
                     Sign In
                   </Link>
-                  <Link
-                    to="/signup"
-                    className="py-2 px-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white text-center rounded-md"
+                  <Link 
+                    to="/signup" 
+                    onClick={toggleNavbar}
+                    className="block w-full text-center bg-gradient-to-r from-blue-500 to-blue-700 text-white py-3 rounded-md transition-colors"
                   >
                     Create an account
                   </Link>
-                </>
+                </div>
               )}
             </div>
           </div>

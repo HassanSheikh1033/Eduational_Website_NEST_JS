@@ -80,7 +80,7 @@ export default function MyProjects() {
                 <div className='flex items-center mt-[220px] justify-center'>
                     <MoonLoader color='#0f1f69' />
                 </div>
-            ) : projects.length ? (
+            ) : projects ? (
                 <div className="container dashboard_container">
                     {projects.map(project => (
                         <article key={project._id} className="dashboard_posts text-black bg-white px-[30px] py-[20px] app_transition">
