@@ -6,11 +6,13 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 
 
+
 @Injectable()
 export class CoursesService {
-  constructor(@InjectModel(Course.name) private courseModel: Model<CourseDocument>) {}
+  constructor(@InjectModel(Course.name) private courseModel: Model<CourseDocument>) { }
 
-  // Create a new course with file uploads for slides[] and img
+  
+  // Create Course  ================================ 
   async create(createCourseDto: CreateCourseDto): Promise<CourseDocument> {
     const courseData = {
       ...createCourseDto,
@@ -27,7 +29,10 @@ export class CoursesService {
     }
   }
 
-  // Get all courses
+
+
+
+  // Get all courses ============================= 
   async findAll(): Promise<CourseDocument[]> {
     try {
       return await this.courseModel.find().exec();
@@ -37,7 +42,10 @@ export class CoursesService {
     }
   }
 
-  // Get one course by ID
+
+
+
+  // Get one course by ID ================== 
   async findOne(id: string): Promise<CourseDocument> {
     try {
       const course = await this.courseModel.findById(id).exec();
@@ -51,22 +59,23 @@ export class CoursesService {
     }
   }
 
-  // Update a course by ID with file uploads for slides[] and img
-  async update(id: string, updateCourseDto: UpdateCourseDto, imgPath?: string, slidePaths?: string[]): Promise<CourseDocument> {
+
+
+
+  // Update the courses  ============
+  async update(id: string, updateCourseDto: UpdateCourseDto): Promise<CourseDocument> {
     try {
       const course = await this.findOne(id);
-
-      // Update the image and slides only if new files are provided
-      if (imgPath) {
-        course.img = imgPath;
-      }
-      if (slidePaths && slidePaths.length > 0) {
-        course.slides = slidePaths.map((path) => ({ title: '', file: path }));
+      if (!course) {
+        throw new NotFoundException(`Course with ID ${id} not found.`);
       }
 
-      // Update other fields
+      console.log('Existing course:', course);
+      console.log('Update data:', updateCourseDto);
+
       Object.assign(course, updateCourseDto);
-      course.updatedAt = new Date(); // Explicitly update the updatedAt field
+
+      course.updatedAt = new Date();
 
       return await course.save();
     } catch (error) {
@@ -74,4 +83,22 @@ export class CoursesService {
       throw new InternalServerErrorException('Failed to update course');
     }
   }
+
+
+ 
+
+
+  // Delete a course by ID
+  async delete(id: string): Promise<void> {
+    const result = await this.courseModel.deleteOne({ _id: id }).exec();
+    if (result.deletedCount === 0) {
+      throw new NotFoundException(`Course with ID ${id} not found`);
+    }
+  }
 }
+
+
+
+
+
+

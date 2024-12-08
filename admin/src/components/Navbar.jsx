@@ -12,17 +12,17 @@ export default function Navbar() {
   const [menu, setMenu] = useState([
     {
       id: 1,
-      name: "Dashboard",
-      icon: <MdDashboard />,
-      isActive: false,
-      path: '/dashboard'
-    },
-    {
-      id: 2,
       name: "Add Courses",
       icon: < FaBookReader />,
       isActive: true,
       path: '/'
+    },
+    {
+      id: 2,
+      name: "My Courses",
+      icon: <MdDashboard />,
+      isActive: false,
+      path: '/mycourses'
     },
     {
       id: 3,
@@ -30,6 +30,13 @@ export default function Navbar() {
       icon: <SiLibreofficewriter />,
       isActive: false,
       path: '/addProjects'
+    },
+    {
+      id: 4,
+      name: "My Projects",
+      icon: <MdDashboard />,
+      isActive: false,
+      path: '/myprojects'
     },
   ]);
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import ProjectsAPI from '../api/projects-api'; 
-
+import ProjectsAPI from '../api/projects-api';
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import styles for toast notifications
 
 export default function AddProjects() {
   const [formData, setFormData] = useState({
@@ -37,6 +38,7 @@ export default function AddProjects() {
     try {
       const newProject = await ProjectsAPI.create(dataToSend);
       console.log('Project created successfully:', newProject);
+      toast.success('Project added successfully!'); // Success notification
       setFormData({
         name: '',
         desc: '',
@@ -45,10 +47,10 @@ export default function AddProjects() {
       });
     } catch (error) {
       console.error('Error creating project:', error);
+      toast.error('Error adding project. Please try again.'); // Error notification
     }
   };
 
-  
   return (
     <div className="min-h-screen flex justify-center items-center ">
       <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
@@ -125,6 +127,9 @@ export default function AddProjects() {
           </div>
         </form>
       </div>
+
+      {/* Toast Container for Notifications */}
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar closeOnClick pauseOnHover />
     </div>
   );
 }

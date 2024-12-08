@@ -1,97 +1,93 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/courses'; // Adjust the base URL as needed
+const COURSES_API_URL = 'http://localhost:3000/courses';
 
 
-const apiCourse = {
-    async createCourse(courseData, imgFile, slidesFiles) {
-        const formData = new FormData();
-
-        // Append image file if it exists
-        if (imgFile) {
-            formData.append('img', imgFile);
-        }
-
-        // Append multiple slide files if they exist
-        if (slidesFiles && slidesFiles.length > 0) {
-            slidesFiles.forEach((file) => {
-                formData.append('slides', file); // Append each slide file
-            });
-        }
-
-        // Append other course data
-        formData.append('name', courseData.name);
-        formData.append('desc', courseData.desc);
-
-        try {
-            const response = await axios.post(BASE_URL, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            return response.data; // Return created course data
-        } catch (error) {
-            console.error("Error response:", error.response); // Log the error response
-            throw new Error(error.response?.data?.message || 'Error creating course');
-        }
-    },
+const CoursesAPI = {
+  // Create a new course
+  create: async (data) => {
+    try {
+      const response = await axios.post(COURSES_API_URL, data);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating course:', error);
+      throw error;
+    }
+  },
 
 
+  // Get all courses
+  getAll: async () => {
+    try {
+      const response = await axios.get(COURSES_API_URL);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      throw error;
+    }
+  },
 
-
-
-    async getAllCourses() {
-        try {
-            const response = await axios.get(BASE_URL);
-            return response.data; // Return array of courses
-        } catch (error) {
-            throw new Error(error.response.data.message || 'Error fetching courses');
-        }
-    },
+  
+  
+  // Get a course by ID
+  getById: async (id) => {
+    try {
+      const response = await axios.get(`${COURSES_API_URL}/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching course:', error);
+      throw error;
+    }
+  },
 
 
 
+  // Update a course by ID with image and slides
+  update: async (id, data) => {
+    try {
+     
+      const response = await axios.patch(`${COURSES_API_URL}/${id}`, data);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating course:', error);
+      throw error;
+    }
+  },
 
-    async getCourseById(id) {
-        try {
-            const response = await axios.get(`${BASE_URL}/${id}`);
-            return response.data; // Return course data by ID
-        } catch (error) {
-            throw new Error(error.response.data.message || 'Error fetching course');
-        }
-    },
+
+
+   // Delete a course by ID
+   delete: async (id) => {
+    try {
+      await axios.delete(`${COURSES_API_URL}/${id}`);
+    } catch (error) {
+      console.error('Error deleting course:', error);
+      throw error;
+    }
+  },
+  
 
 
 
+  // Testing file upload (test files endpoint)
+  testFileUpload: async (files) => {
+    try {
+      const formData = new FormData();
+      Array.from(files).forEach((file) => {
+        formData.append('files', file);  // 'files' matches the parameter in the controller
+      });
 
-    async updateCourse(id, updateData, imgFile, slidesFiles) {
-        const formData = new FormData();
-
-        if (imgFile) {
-            formData.append('img', imgFile); // Append new image file
-        }
-
-        if (slidesFiles) {
-            slidesFiles.forEach((file) => {
-                formData.append('slides', file); // Append new slide files
-            });
-        }
-
-        // Append other update data
-        formData.append('name', updateData.name);
-        formData.append('desc', updateData.desc);
-
-        try {
-            const response = await axios.patch(`${BASE_URL}/${id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            return response.data; // Return updated course data
-        } catch (error) {
-            throw new Error(error.response.data.message || 'Error updating course');
-        }
-    },
+      const response = await axios.post(`${COURSES_API_URL}/test`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error in test file upload:', error);
+      throw error;
+    }
+  },
 };
 
-export default apiCourse;
+export default CoursesAPI;

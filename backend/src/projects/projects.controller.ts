@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Patch, Param, Body, HttpException, HttpStatus,
-   UseInterceptors, UploadedFile, Delete, HttpCode, NotFoundException  } from '@nestjs/common';
+import {
+  Controller, Get, Post, Patch, Param, Body, HttpException, HttpStatus,
+  UseInterceptors, UploadedFile, Delete, HttpCode, NotFoundException
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -38,6 +40,7 @@ export class ProjectsController {
     @Body() createProjectDto: CreateProjectDto,
   ): Promise<Project> {
     try {
+      // Set the file path to the DTO's img property if file is uploaded
       if (file) {
         createProjectDto.img = file.path;
       }
@@ -68,7 +71,7 @@ export class ProjectsController {
   }
 
 
-  
+
   // Update a project by ID with image upload
   @Patch(':id')
   @UseInterceptors(FileInterceptor('img', { storage: ProjectsController.storageOptions }))
@@ -77,8 +80,8 @@ export class ProjectsController {
   @ApiResponse({ status: 404, description: 'Project not found.' })
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
   async update(
-    @Param('id') id: string, 
-    @UploadedFile() file: Express.Multer.File, 
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
     @Body() updateProjectDto: UpdateProjectDto
   ): Promise<Project> {
     try {
@@ -111,7 +114,7 @@ export class ProjectsController {
     }
   }
 
-  
+
 }
 
 

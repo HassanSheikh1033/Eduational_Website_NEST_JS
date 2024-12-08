@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CardContainer, CardBody, CardItem } from "../components/3DCard";
 import ProjectsAPI from "../api/projectsApi";
+import { MoonLoader } from 'react-spinners';
 
 
 const Projects = () => {
@@ -27,7 +28,9 @@ const Projects = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading projects...</div>;
+    return <div className='flex items-center mt-[150px] justify-center'>
+    <MoonLoader color='#0f1f69' />
+  </div>
   }
 
   if (error) {
@@ -74,7 +77,7 @@ const Projects = () => {
 
             {/* Created At */}
             <CardItem translateZ={5} className="mt-2 text-sm text-gray-400">
-              <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
+              <p>Featured at: {new Date(card.createdAt).toLocaleDateString()}</p>
             </CardItem>
           </CardBody>
         </CardContainer>

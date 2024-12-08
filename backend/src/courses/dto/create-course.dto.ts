@@ -22,7 +22,7 @@ export class CreateCourseDto {
   desc: string;
 
   @IsOptional()
-  img?: string; // Explicitly define as file object
+  img?: string; 
 
   @IsArray()
   @IsOptional()

@@ -2,63 +2,64 @@ import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import { navItems } from "../constants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser } from '../context/userContext';
-import {userApi} from '../api/userApi'
-import { h1 } from "framer-motion/client";
+import { userApi } from '../api/userApi';
 
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const { user, setUser } = useUser();
-  const [profileImg, setProfileImg] = useState('')
+  const [profileImg, setProfileImg] = useState('');
+  const navigate = useNavigate();
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
   };
 
-
   useEffect(() => {
     const fetchUser = async () => {
       if (user && user._id) {
         try {
-          const userData = await userApi.getById(user._id); 
-          if (JSON.stringify(userData) !== JSON.stringify(user)) {
-            setProfileImg(userData); 
-            console.log(userData)
-            console.log(userData.avatar)
-          }
+          const userData = await userApi.getById(user._id);
+          setProfileImg(userData);
         } catch (error) {
-          console.error('Failed to fetch user:', error); 
+          console.error('Failed to fetch user:', error);
         }
       }
     };
-
     fetchUser();
-  }, [user, setUser]); 
+  }, [user, setUser]);
 
-
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/');
+  };
 
   return (
-    <nav className="sticky top-0 z-50 py-3 px-6 backdrop-blur-lg bg-white border-b border-neutral-700/80">
-      <div className="container px-4 mx-auto relative lg:text-sm">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center flex-shrink-0">
-            <img className="h-10 w-10 mr-2" src={logo} alt="Logo" />
-            <span className="text-xl tracking-tight font-medium">HF Tech</span>
-          </div>
-          <ul className="hidden lg:flex ml-14 space-x-12 font-medium text-blue-950">
-            {navItems.map((item, index) => (
-              <li key={index}>
-                <Link to={item.href}>{item.label}</Link>
-              </li>
-            ))}
-          </ul>
+    <nav className="sticky top-0 z-50 py-3 px-6 bg-white border-b border-neutral-300 shadow-sm backdrop-blur-lg">
+      <div className="container mx-auto flex justify-between items-center">
+        {/* Logo */}
+        <div className="flex items-center space-x-2">
+          <img className="h-10 w-10" src={logo} alt="Logo" />
+          <span className="text-xl font-semibold text-gray-900">HF Tech</span>
+        </div>
 
-          {user ? (
-            <Link
-              to={`/updateProfile/${user._id}`}
-              className="flex items-center space-x-2 p-2 rounded-md"
-            >
+        {/* Desktop Menu */}
+        <ul className="hidden lg:flex space-x-8 font-medium text-gray-700">
+          {user && navItems.map((item, index) => (
+            <li key={index}>
+              <Link to={item.href} className="hover:text-blue-500 transition duration-200">
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* Profile and Actions - Desktop */}
+        {user ? (
+          <div className="hidden lg:flex items-center space-x-4">
+            <Link to={`/updateProfile/${user._id}`} className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
                 {profileImg.avatar ? (
                   <img
@@ -74,55 +75,88 @@ const Navbar = () => {
               </div>
               <span className="text-gray-700">{user.username || 'Profile'}</span>
             </Link>
-          ) : (
-            <Link
-              to="/signin"
-              className="text-gray-700 p-2 hover:bg-gray-200 rounded-md"
+            <button
+              onClick={handleLogout}
+              className="text-gray-700 p-2 hover:bg-gray-200 rounded-md transition duration-200"
             >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <div className="hidden lg:flex space-x-6">
+            <Link to="/signin" className="text-gray-700 p-2 hover:bg-gray-200 rounded-md">
               Sign In
             </Link>
-          )}
-
-          <div className="hidden lg:flex justify-center space-x-12 items-center">
-            <a href="#" className="py-2 px-3 border font-medium border-neutral-700/80 rounded-md">
-              Sign In
-            </a>
             <Link
-              to={'/signup'}
-              className="bg-gradient-to-r from-blue-500 text-white to-blue-900 py-2 px-3 rounded-md"
+              to="/signup"
+              className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-md transition duration-200"
             >
               Create an account
             </Link>
           </div>
-          <div className="lg:hidden md:flex flex-col justify-end">
-            <button onClick={toggleNavbar}>
-              {mobileDrawerOpen ? <X /> : <Menu />}
-            </button>
-          </div>
-        </div>
-        {mobileDrawerOpen && (
-          <div className="fixed right-0 z-20 bg-neutral-900 w-full p-12 flex flex-col justify-center items-center lg:hidden">
-            <ul>
-              {navItems.map((item, index) => (
-                <li key={index} className="py-4">
-                  <a href={item.href}>{item.label}</a>
+        )}
+
+        {/* Mobile Menu Button */}
+        <button onClick={toggleNavbar} className="lg:hidden p-2">
+          {mobileDrawerOpen ? "" : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile Drawer Menu */}
+      {mobileDrawerOpen && (
+        <div className="fixed inset-0 z-40 flex flex-col h-screen bg-opacity-15 bg-black items-center justify-center space-y-6 lg:hidden">
+          <div className="bg-white w-4/5 max-w-sm p-6 rounded-lg shadow-lg">
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-2xl font-semibold text-gray-900"></span>
+              <button onClick={toggleNavbar} className="text-gray-700">
+                <X size={24} />
+              </button>
+            </div>
+
+            <ul className="space-y-4 text-lg font-medium text-gray-800">
+              {user && navItems.map((item, index) => (
+                <li key={index}>
+                  <Link
+                    to={item.href}
+                    onClick={toggleNavbar}
+                    className="block py-2 px-4 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                  >
+                    {item.label}
+                  </Link>
                 </li>
               ))}
             </ul>
-            <div className="flex space-x-6">
-              <a href="#" className="py-2 px-3 border rounded-md">
-                Sign In
-              </a>
-              <a
-                href="#"
-                className="py-2 px-3 rounded-md bg-gradient-to-r from-orange-500 to-orange-800"
-              >
-                Create an account
-              </a>
+
+            <div className="mt-8 space-y-4">
+              {user ? (
+                <div className="flex flex-col space-y-4">
+                  <Link to={`/updateProfile/${user._id}`} className="py-2 px-4 bg-gray-200 text-center rounded-md">
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="py-2 px-4 bg-gradient-to-r from-red-500 to-red-700 text-white text-center rounded-md transition duration-200"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <Link to="/signin" className="py-2 px-4 bg-gray-200 text-center rounded-md">
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="py-2 px-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white text-center rounded-md"
+                  >
+                    Create an account
+                  </Link>
+                </>
+              )}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </nav>
   );
 };

@@ -1,12 +1,16 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
@@ -25,9 +29,12 @@ import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 
+
+
+
 @Controller('courses')
 export class CoursesController {
-  constructor(private readonly coursesService: CoursesService) {}
+  constructor(private readonly coursesService: CoursesService) { }
 
   // Create Course function
   @Post()
@@ -60,6 +67,8 @@ export class CoursesController {
     }
   }
 
+
+
   // GET ALL Course function
   @Get()
   @ApiOperation({ summary: 'Get all courses' })
@@ -71,6 +80,7 @@ export class CoursesController {
   async findAll(): Promise<Course[]> {
     return this.coursesService.findAll();
   }
+
 
   // GET Course by id function
   @Get(':id')
@@ -86,49 +96,10 @@ export class CoursesController {
     return course;
   }
 
+
+
   // Update Course function
   @Patch(':id')
-  @UseInterceptors(
-    FileInterceptor('img', {
-      storage: diskStorage({
-        destination: './uploads/images',
-        filename: (req, file, cb) => {
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          cb(null, `${randomName}${extname(file.originalname)}`);
-        },
-      }),
-      fileFilter: (req, file, cb) => {
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-        if (allowedTypes.includes(file.mimetype)) {
-          cb(null, true);
-        } else {
-          cb(new Error('Only jpg, jpeg, png files are allowed!'), false);
-        }
-      },
-    }),
-    FilesInterceptor('slides', 10, {
-      storage: diskStorage({
-        destination: './uploads/slides',
-        filename: (req, file, cb) => {
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          cb(null, `${randomName}${extname(file.originalname)}`);
-        },
-      }),
-      fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'application/pdf') {
-          cb(null, true);
-        } else {
-          cb(new Error('Only PDF files are allowed for slides!'), false);
-        }
-      },
-    }),
-  )
   @ApiOperation({ summary: 'Update a course by ID' })
   @ApiResponse({
     status: 200,
@@ -137,33 +108,25 @@ export class CoursesController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid input data or file upload error.',
+    description: 'Invalid input data.',
   })
   @ApiResponse({ status: 404, description: 'Course not found.' })
   async update(
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
-    @UploadedFile() img?: Express.Multer.File,
-    @UploadedFiles() slides?: Express.Multer.File[],
   ): Promise<Course> {
     try {
-      const imgPath = img ? img.path : undefined;
-      const slidePaths = slides ? slides.map((file) => file.path) : undefined;
-
-      return await this.coursesService.update(
-        id,
-        updateCourseDto,
-        imgPath,
-        slidePaths,
-      );
+      return await this.coursesService.update(id, updateCourseDto);
     } catch (error) {
-      console.error('Error in update method:', error);
+      console.error('Error in update method:', error); // Log error for debugging
       throw new HttpException(
-        'Invalid input data or file upload error.',
-        HttpStatus.BAD_REQUEST,
+        error.message || 'Invalid input data.',
+        error instanceof NotFoundException ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST,
       );
     }
   }
+
+
 
   //?Tesing file system ==========================================
   @Post('test')
@@ -226,4 +189,28 @@ export class CoursesController {
       throw new HttpException('File upload error', HttpStatus.BAD_REQUEST);
     }
   }
+
+
+
+  // Delete Course function
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a course by ID' })
+  @ApiResponse({ status: 204, description: 'Course deleted successfully.' })
+  @ApiResponse({ status: 404, description: 'Course not found.' })
+  async delete(@Param('id') id: string): Promise<void> {
+    try {
+      await this.coursesService.delete(id);
+    } catch (error) {
+      console.error('Error in delete method:', error);
+      throw new HttpException('Course not found.', HttpStatus.NOT_FOUND);
+    }
+  }
 }
+
+
+
+
+
+
+
+

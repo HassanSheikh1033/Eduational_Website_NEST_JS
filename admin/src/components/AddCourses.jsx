@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import apiCourse from '../api/courses';
+import CoursesAPI from '../api/courses';
+import FileUploadsAPI from '../api/fileUpload-api';
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
 
 export default function AddCourses() {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [slides, setSlides] = useState([]);
   const [image, setImage] = useState(null);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
 
   const handleSlideUpload = (e) => {
-    const uploadedFiles = Array.from(e.target.files);
+    const uploadedFiles = Array.from(e.target.files).map((file) => ({
+      file,
+      name: '',
+    }));
     setSlides([...slides, ...uploadedFiles]);
   };
 
@@ -23,25 +27,49 @@ export default function AddCourses() {
     setImage(e.target.files[0]);
   };
 
+  const handleSlideNameChange = (index, newName) => {
+    const updatedSlides = slides.map((slide, idx) =>
+      idx === index ? { ...slide, name: newName } : slide
+    );
+    setSlides(updatedSlides);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const courseData = new FormData();
-    courseData.append('name', title);
-    courseData.append('desc', desc);
-    if (image) courseData.append('img', image);
-    slides.forEach((slide) => {
-      courseData.append('slides', slide);
-    });
-
     try {
-      const createdCourse = await apiCourse.createCourse(courseData);
-      setSuccess(`Course "${createdCourse.name}" created successfully!`);
-      setError(null);
+      // 1. Upload the image
+      let imageUrl = '';
+      if (image) {
+        const response = await FileUploadsAPI.uploadSingle(image);
+        imageUrl = response.imgPath;
+      }
+
+      const response = await FileUploadsAPI.uploadMultiple(slides.map(slide => slide.file));
+      console.log('Slide upload response:', response);
+
+      const slideData = response.slidePaths.map((url, index) => ({
+        title: slides[index].name, // Map to title instead of name
+        file: url, // Map the file path to the file property
+      }));
+
+      // 3. Prepare course data with URLs and names
+      const courseData = {
+        name: title,
+        desc,
+        img: imageUrl,
+        slides: slideData,
+      };
+
+      console.log("Course Data:", courseData);
+
+      // 4. Create the course
+      const createdCourse = await CoursesAPI.create(courseData);
+      toast.success(`Course "${createdCourse.name}" created successfully!`); // Success notification
       resetForm();
     } catch (err) {
-      setError(err.message);
-      setSuccess(null);
+      console.error('Error creating course:', err.response?.data || err.message);
+      toast.error(`Error: ${err.response?.data?.message || err.message}`); // Error notification
     }
   };
 
@@ -53,11 +81,8 @@ export default function AddCourses() {
   };
 
   return (
-   
     <div className="w-full max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg mt-10">
       <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Add New Course</h2>
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      {success && <p className="text-green-500 text-center mb-4">{success}</p>}
       <form onSubmit={handleSubmit}>
         {/* Title Input */}
         <div className="mb-6">
@@ -102,15 +127,24 @@ export default function AddCourses() {
               <h3 className="text-gray-700 font-semibold mb-2">Uploaded Slides:</h3>
               <ul>
                 {slides.map((slide, index) => (
-                  <li key={index} className="flex justify-between items-center mb-2">
-                    <span>{slide.name}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeSlide(index)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      Remove
-                    </button>
+                  <li key={index} className="mb-2">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="mr-4">{slide.file.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeSlide(index)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Enter slide name"
+                      value={slide.name}
+                      onChange={(e) => handleSlideNameChange(index, e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                   </li>
                 ))}
               </ul>
@@ -139,7 +173,9 @@ export default function AddCourses() {
           </button>
         </div>
       </form>
+
+      {/* Toast Container for Notifications */}
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar closeOnClick pauseOnHover />
     </div>
-   
   );
 }

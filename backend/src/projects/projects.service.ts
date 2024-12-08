@@ -20,6 +20,7 @@ export class ProjectsService {
     }
   }
 
+  
   // Get all projects
   async findAll(): Promise<ProjectDocument[]> {
     try {
@@ -29,6 +30,7 @@ export class ProjectsService {
       throw new InternalServerErrorException('Failed to fetch projects');
     }
   }
+
 
   // Get one project by ID
   async findOne(id: string): Promise<ProjectDocument> {

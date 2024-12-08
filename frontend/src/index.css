@@ -19,3 +19,138 @@
   overflow: hidden;
   text-overflow: ellipsis; /* Optional: Add ellipsis (...) at the end */
 }
+
+/* Wrapper for avatar section */
+.avatar_wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+/* Avatar styling */
+.profile_avatar {
+  width: 7rem;
+  height: 7rem;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.profile_avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile_avatar_d {
+  border: 4px solid #333; /* Dark mode border color */
+}
+
+.profile_avatar_l {
+  border: 4px solid #ccc; /* Light mode border color */
+}
+
+/* Transition styling */
+.app_transition:hover .profile_avatar {
+  transform: scale(1.05);
+}
+
+/* Avatar form styling */
+.avatar-form {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-form input[type="file"] {
+  display: none;
+}
+
+.avatar-form label {
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #007bff;
+  transition: color 0.2s;
+}
+
+.avatar-form label:hover {
+  color: #0056b3;
+}
+
+/* Confirm button */
+.profile_avatar-btn {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease;
+}
+
+.profile_avatar-btn:hover {
+  background-color: #218838;
+}
+
+/* Form container */
+.form-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+
+/* Labels and Inputs */
+.form-container label {
+  display: block;
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0px 0px 0px 2px rgba(0, 123, 255, 0.3);
+}
+
+/* Submit Button */
+.form-container button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.form-container button[type="submit"]:hover {
+  background-color: #0056b3;
+}

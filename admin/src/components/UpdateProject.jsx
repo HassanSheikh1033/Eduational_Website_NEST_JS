@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ProjectsAPI from '../api/projects-api';
 import { useParams } from 'react-router-dom';
 
 export default function UpdateProject() {
-    const { id } = useParams(); // Assumes `id` is passed via URL parameters
+    const { id } = useParams(); 
     const [formData, setFormData] = useState({
         name: '',
         desc: '',
@@ -15,10 +17,9 @@ export default function UpdateProject() {
         const fetchProject = async () => {
             try {
                 const project = await ProjectsAPI.getById(id);
-                console.log('Fetched project:', project); // Log the fetched project
                 setFormData({
                     name: project.name || '',
-                    desc: project.desc || '', // Ensure this is correctly set
+                    desc: project.desc || '', 
                     img: null,
                     link: project.link || '',
                 });
@@ -30,16 +31,14 @@ export default function UpdateProject() {
         fetchProject();
     }, [id]);
 
-    // Handle input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value !== "None" ? value : '', // Avoid setting desc to "None"
+            [name]: value !== "None" ? value : '',
         }));
     };
 
-    // Handle image file change
     const handleImageChange = (e) => {
         setFormData({
             ...formData,
@@ -47,23 +46,18 @@ export default function UpdateProject() {
         });
     };
 
-
-    // Handle form submission for updating the project
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const dataToSend = new FormData();
         dataToSend.append('name', formData.name);
-    
         dataToSend.append('desc', formData.desc === "None" ? '' : formData.desc);
         if (formData.img) dataToSend.append('img', formData.img);
         dataToSend.append('link', formData.link);
 
-
         try {
             const updatedProject = await ProjectsAPI.update(id, dataToSend);
-            console.log('Project updated successfully:', updatedProject);
-           
+            toast.success('Project updated successfully!');
             setFormData({
                 ...formData,
                 name: updatedProject.name || formData.name,
@@ -72,18 +66,15 @@ export default function UpdateProject() {
                 link: updatedProject.link || formData.link,
             });
         } catch (error) {
+            toast.error('Failed to update project');
             console.error('Error updating project:', error);
         }
     };
-
-
-
 
     return (
         <div className="min-h-screen flex justify-center items-center">
             <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
                 <h2 className="text-3xl font-semibold text-center mb-6">Update Project</h2>
-
                 <form onSubmit={handleSubmit}>
                     {/* Project Name */}
                     <div className="mb-4">
@@ -154,8 +145,9 @@ export default function UpdateProject() {
                     </div>
                 </form>
             </div>
+
+            {/* Toast Notification */}
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar closeOnClick pauseOnHover />
         </div>
     );
 }
-
-
