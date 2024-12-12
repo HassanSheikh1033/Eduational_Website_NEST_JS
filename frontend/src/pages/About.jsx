@@ -105,31 +105,32 @@ export default function About() {
     <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Profile Header */}
-        <div className="grid md:grid-cols-3 gap-10 items-center mb-16">
-          <div className="col-span-1 flex justify-center">
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur-lg opacity-75 group-hover:opacity-100 transition duration-1000"></div>
-              <div className="relative bg-white p-2 rounded-xl">
-                <img 
-                  src={about.profileImage} 
-                  alt={about.name} 
-                  className="w-64 h-64 object-cover rounded-lg transform transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="col-span-2 text-center md:text-left">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {about.name}
-            </h1>
-            <p className="text-2xl text-blue-600 font-semibold mb-6">
-              {about.title}
-            </p>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              {about.description}
-            </p>
-          </div>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center mb-16">
+  <div className="col-span-1 flex justify-center">
+    <div className="relative group">
+      <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur-lg opacity-75 group-hover:opacity-100 transition duration-1000"></div>
+      <div className="relative bg-white p-2 rounded-xl">
+        <img 
+          src={about.profileImage} 
+          alt={about.name} 
+          className="w-40 h-40 sm:w-64 sm:h-64 object-cover rounded-lg transform transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
+    </div>
+  </div>
+  <div className="col-span-1 md:col-span-2 text-center md:text-left">
+    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+      {about.name}
+    </h1>
+    <p className="text-xl sm:text-2xl text-blue-600 font-semibold mb-6">
+      {about.title}
+    </p>
+    <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+      {about.description}
+    </p>
+  </div>
+</div>
+
 
         {/* Skills and Experience */}
         <div className="grid md:grid-cols-2 gap-10">
