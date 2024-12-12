@@ -87,9 +87,17 @@ export default function MyCourses() {
                         <article key={course._id} className="dashboard_posts text-black bg-white px-[30px] py-[20px] app_transition">
                             <div className="dashboard_posts-info">
                                 <div className="dashboard_posts-thumbnail">
-                                    <img
+                                    <video
                                         src={`http://localhost:3000/${course.img.replace(/\\/g, '/')}`} // Ensure the image path is correct
-                                        alt={course.name} // Add alt text for accessibility
+                                        // alt={course.name} // Add alt text for accessibility
+                                        muted
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.muted = false;
+                                            e.currentTarget.play();
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.muted = true;
+                                        }}
                                     />
                                 </div>
                                 <h5>{course.name}</h5>

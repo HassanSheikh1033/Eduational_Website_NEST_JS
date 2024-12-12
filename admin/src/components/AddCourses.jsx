@@ -154,7 +154,7 @@ export default function AddCourses() {
 
         {/* Image Upload */}
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Upload Image</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Upload Thumbnail</label>
           <input
             type="file"
             onChange={handleImageUpload}

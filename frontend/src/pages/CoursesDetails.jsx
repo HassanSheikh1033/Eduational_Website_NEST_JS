@@ -29,12 +29,20 @@ export default function CourseDetails() {
     <div className="max-w-5xl mx-auto p-8 space-y-10">
       {/* Course Image */}
       <div className="relative w-full h-80 rounded-xl overflow-hidden shadow-lg">
-        <img
+        <video
           src={`http://localhost:3000/${course.img.replace(/\\/g, '/')}`}
-          alt={course.name}
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+          muted
+          controls
+          autoPlay
+          onMouseEnter={(e) => {
+            e.currentTarget.muted = false;
+            e.currentTarget.play();
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.muted = true;
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-70" />
       </div>
 
       {/* Course Title */}
@@ -71,8 +79,9 @@ export default function CourseDetails() {
 
 
       {/* Related Courses Section */}
-     <RelatedCourse currentCourseId={id}/>
-     
+      <RelatedCourse currentCourseId={id} />
+
     </div>
   );
 }
+

@@ -15,6 +15,7 @@ const Courses = () => {
       try {
         const data = await coursesAPI.getAll();
         setCourses(data);
+        console.log(data)
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch courses');
@@ -63,49 +64,58 @@ const Courses = () => {
 
   return (
     <div className="min-h-screen  py-16 px-4 sm:px-6 lg:px-8">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-7xl mx-auto"
       >
-         <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 mb-4">
-           Learning{" "}
+            Learning{" "}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
-            Journey
+              Journey
             </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Continuous growth through structured and diverse learning experiences
+            Continuous growth through structured and diverse learning experiences
           </p>
         </motion.div>
-        
 
-        <motion.div 
+
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {courses.map((course, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               variants={itemVariants}
               whileHover={{ scale: 1.05 }}
               className="bg-white rounded-xl shadow-lg overflow-hidden group"
             >
               <div className="relative">
-                <img
+                <video
                   src={`http://localhost:3000/${course.img.replace(/\\/g, '/')}`}
-                  alt={course.name}
+                  // alt={course.name}
+                  controls
+                  autoPlay
                   className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                  muted
+                  onMouseEnter={(e) => {
+                    e.currentTarget.muted = false;
+                    e.currentTarget.play();
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.muted = true;
+                  }}
+                />                
               </div>
 
               <div className="p-6">
@@ -121,7 +131,7 @@ const Courses = () => {
                     whileHover={{ scale: 1.1 }}
                     className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
                   >
-                    <Link 
+                    <Link
                       to={`/courses/${course._id}`}
                       className="flex items-center"
                     >

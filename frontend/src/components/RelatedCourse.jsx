@@ -36,12 +36,20 @@ export default function RelatedCourse({ currentCourseId }) {
             className="relative block p-4 rounded-xl shadow-lg overflow-hidden bg-white transform hover:scale-105 transition duration-300"
           >
             <div className="relative h-40 rounded-lg overflow-hidden">
-              <img
+              <video
                 src={`http://localhost:3000/${related.img.replace(/\\/g, '/')}`}
-                alt={related.name}
+                muted
+                controls
+                autoPlay
+                onMouseEnter={(e) => {
+                  e.currentTarget.muted = false;
+                  e.currentTarget.play();
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.muted = true;
+                }}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70" />
             </div>
 
             <div className="pt-4">
@@ -56,3 +64,5 @@ export default function RelatedCourse({ currentCourseId }) {
     </div>
   );
 }
+
+
