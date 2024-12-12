@@ -1,6 +1,37 @@
-import React from 'react';
+import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 const ContactSection = () => {
+  const [result, setResult] = useState("");
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    setResult("Sending....");
+    const formData = new FormData(event.target);
+
+    formData.append("access_key", "5870873d-050d-4958-a284-2133fbf30016");
+
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setResult("Form Submitted Successfully");
+      Swal.fire({
+        title: "Success!",
+        text: "Form Submitted Successfully",
+        icon: "success",
+      });
+      event.target.reset();
+    } else {
+      console.error("Error", data);
+      setResult(data.message || "An error occurred. Please try again.");
+    }
+  };
+
   return (
     <div className="w-full min-h-screen flex flex-col justify-center items-center py-10 px-8">
       <div className="text-center mb-16">
@@ -80,10 +111,11 @@ const ContactSection = () => {
 
         {/* Right Section */}
         <section className="w-full lg:w-2/3 mt-10 lg:mt-0">
-          <form className="flex flex-wrap -mx-2">
+          <form className="flex flex-wrap -mx-2" onSubmit={onSubmit}>
             <div className="w-full md:w-1/2 px-2 mb-6">
               <input
                 type="text"
+                name="name"
                 required
                 className="w-full px-3 py-4 rounded-md bg-white text-black border-b-2 border-gray-600 focus:border-blue-500 outline-none"
                 placeholder="Your Name"
@@ -92,6 +124,7 @@ const ContactSection = () => {
             <div className="w-full md:w-1/2 px-2 mb-6">
               <input
                 type="email"
+                name="email"
                 required
                 className="w-full px-3 py-4 rounded-md bg-white text-black border-b-2 border-gray-600 focus:border-blue-500 outline-none"
                 placeholder="Email"
@@ -100,6 +133,7 @@ const ContactSection = () => {
             <div className="w-full px-2 mb-6">
               <input
                 type="text"
+                name="subject"
                 required
                 className="w-full px-3 py-4 rounded-md bg-white text-black border-b-2 border-gray-600 focus:border-blue-500 outline-none"
                 placeholder="Subject"
@@ -107,25 +141,26 @@ const ContactSection = () => {
             </div>
             <div className="w-full px-2 mb-6">
               <textarea
+                name="message"
                 required
                 className="w-full h-40 px-3 py-4 rounded-md bg-white text-black border-b-2 border-gray-600 focus:border-blue-500 outline-none resize-none"
                 placeholder="Say Something"
               ></textarea>
             </div>
             <div className="w-full px-2">
-              <button className="w-full py-2 bg-gradient-to-r from-blue-500  to-blue-900 text-white rounded-lg transition">
+              <button
+                type="submit"
+                className="w-full py-2 bg-gradient-to-r from-blue-500  to-blue-900 text-white rounded-lg transition"
+              >
                 Send Message
               </button>
             </div>
           </form>
+          <p className="text-center text-gray-500 mt-4">{result}</p>
         </section>
       </div>
     </div>
   );
 };
 
-
-
 export default ContactSection;
-
-

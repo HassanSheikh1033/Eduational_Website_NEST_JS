@@ -41,15 +41,21 @@ export default function EditProfile() {
   }, [id]);
 
   const handleChange = (e) => {
-    const { name, files } = e.target;
+    const { name, value, files } = e.target;
     if (name === 'avatar') {
       setProfile((prevProfile) => ({
         ...prevProfile,
         avatar: files[0], // Update the avatar
       }));
       setIsAvatarTouched(true); // Mark avatar as touched
+    } else {
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        [name]: value, // Update other fields
+      }));
     }
   };
+  
 
   const changeAvatarHandler = async () => {
     if (!profile.avatar || !(profile.avatar instanceof File)) {
@@ -122,7 +128,7 @@ export default function EditProfile() {
                 profile.avatar instanceof File
                   ? URL.createObjectURL(profile.avatar)
                   : profile.avatar
-                  ? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/uploads/${profile.avatar}`
+                  ? `http://localhost:3000${profile.avatar}`
                   : '/default-avatar.png'
               }
               alt="Profile Avatar"
@@ -224,3 +230,5 @@ export default function EditProfile() {
     </div>
   );
 }
+
+
