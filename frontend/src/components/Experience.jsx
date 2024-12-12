@@ -1,38 +1,57 @@
+import { useState, useEffect } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { checklistItems } from "../constants";
-import BooksCanvas from '../canvas/Book';
+import BooksCanvas from "../canvas/Book";
 import { motion } from "framer-motion";
 
 const Experience = () => {
+  const [isLargeScreen, setIsLargeScreen] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1000);
+    };
+
+    // Check screen size on mount
+    handleResize();
+
+    // Add event listener for resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup listener on unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="mt-20">
       <h2 className="text-3xl sm:text-5xl mb-7 lg:text-6xl text-center mt-6 tracking-wide">
-     
         <span className="bg-gradient-to-r from-blue-500 to-blue-900 text-transparent bg-clip-text">
-      
+          {/* Add content here if needed */}
         </span>
       </h2>
-      <motion.div 
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 mb-4">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="text-center mb-16"
+      >
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 mb-4">
           My Tech{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
+          <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
             Experience.
-            </span>
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          </span>
+        </h2>
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
           Where I Honed My Skills and Knowledge
-          </p>
-        </motion.div>
+        </p>
+      </motion.div>
       <div className="flex flex-wrap justify-center">
-        <div className="p-2 w-full lg:w-1/2">
-          <BooksCanvas />
-        </div>
-        <div className="pt-12 w-full lg:w-1/2">
+        {isLargeScreen && (
+          <div className="p-2 w-full lg:w-1/2">
+            <BooksCanvas />
+          </div>
+        )}
+        <div className={`pt-12 w-full ${isLargeScreen ? "lg:w-1/2" : "lg:w-full"}`}>
           {checklistItems.map((item, index) => (
             <div key={index} className="flex mb-12">
               <div className="text-blue-400 mx-6 bg-neutral-700 h-10 w-10 p-2 justify-center items-center rounded-full">

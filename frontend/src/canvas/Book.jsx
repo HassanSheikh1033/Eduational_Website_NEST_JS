@@ -21,8 +21,8 @@ const Book = ({ isMobile }) => {
       <pointLight intensity={2.5} color='orange' />
       <primitive
         object={book.scene}
-        scale={isMobile ? 4.1 : 7.4}
-        position={isMobile ? [0, -4, -2.2] : [0, -2, 0.5]}
+        scale={isMobile ? 15.1 : 7.4}
+        position={isMobile ? [0, -6, -2.2] : [0, -2, 0.5]}
         rotation={[0, 0, 0]} // slight 5-degree adjustment if needed
 
       />
@@ -34,7 +34,7 @@ const BooksCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 1300px)");
+    const mediaQuery = window.matchMedia("(max-width: 1000px)");
     setIsMobile(mediaQuery.matches);
 
     const handleMediaQueryChange = (event) => {
